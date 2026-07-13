@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthony Zuñiga | Full Stack Developer</title>
+<meta name="description" content="Portafolio de Anthony Zuñiga, estudiante de Arquitectura de Sistemas de Información y desarrollador Full Stack en formación. Proyectos web, diseño UI/UX, certificados y desarrollo de videojuegos.">
+<meta name="theme-color" content="#0a0e17">
+<meta property="og:title" content="Anthony Zuñiga | Full Stack Developer">
+<meta property="og:description" content="Portafolio de proyectos web, UI/UX y game dev.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300e0ff%22>AZ</text></svg>">
+<style>
+:root{
+  --bg:#0a0e17;
+  --bg2:#0f1626;
+  --accent:#00e0ff;
+  --accent2:#7c5cff;
+  --text:#e6f1ff;
+  --muted:#7a8aa3;
+  --card:#121a2b;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;
+}
+
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+
+/* Nav */
+nav{
+  position:fixed;top:0;width:100%;display:flex;justify-content:space-between;
+  align-items:center;padding:20px 8%;z-index:100;
+  background:rgba(10,14,23,0.6);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:0.92rem;
+  position:relative;transition:color .3s;white-space:nowrap;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-5px;width:0;height:2px;
+  background:var(--accent);transition:width .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+
+.nav-toggle{
+  display:none;background:none;border:none;color:var(--text);font-size:1.6rem;cursor:pointer;
+  padding:4px 8px;
+}
+
+/* Hero */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:0 20px;position:relative;
+}
+.hero h1{font-size:clamp(2.5rem,8vw,5rem);font-weight:800;line-height:1.1;}
+.hero h1 span{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p.role{
+  margin-top:15px;font-size:clamp(1rem,2.5vw,1.4rem);color:var(--muted);
+  min-height:1.5em;font-family:monospace;
+}
+.cursor{display:inline-block;width:10px;background:var(--accent);animation:blink 0.8s infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+.hero .btns{margin-top:35px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+.btn{
+  padding:14px 32px;border-radius:50px;font-weight:600;text-decoration:none;
+  transition:.3s;border:1px solid transparent;cursor:pointer;font-size:1rem;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04101e;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,224,255,0.25);}
+.btn-outline{border:1px solid var(--accent);color:var(--accent);background:transparent;}
+.btn-outline:hover{background:rgba(0,224,255,0.1);transform:translateY(-3px);}
+
+.scroll-down{position:absolute;bottom:40px;color:var(--muted);font-size:0.85rem;
+  display:flex;flex-direction:column;align-items:center;gap:8px;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(10px);}}
+
+/* Section general */
+section{padding:100px 8%;max-width:1300px;margin:0 auto;}
+.section-title{
+  font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:10px;
+  display:flex;align-items:center;gap:15px;
+}
+.section-title .num{color:var(--accent);font-family:monospace;font-size:1.2rem;}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1);}
+.section-sub{color:var(--muted);margin-bottom:50px;max-width:600px;}
+
+.fade{opacity:0;transform:translateY(40px);transition:all .8s ease;}
+.fade.visible{opacity:1;transform:translateY(0);}
+
+/* About */
+.about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:center;}
+@media(max-width:800px){.about-grid{grid-template-columns:1fr;}}
+.avatar-box{
+  position:relative;border-radius:20px;overflow:hidden;
+  background:linear-gradient(135deg,var(--card),#1a2540);
+  border:1px solid rgba(255,255,255,0.06);aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;font-size:6rem;
+}
+.avatar-box img{width:100%;height:100%;object-fit:cover;}
+.glow-ring{position:absolute;width:120%;height:120%;border:1px solid var(--accent);
+  border-radius:30%;opacity:0.15;animation:spin 20s linear infinite;pointer-events:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.about-text p{color:var(--muted);line-height:1.8;margin-bottom:20px;font-size:1.05rem;}
+.about-text strong{color:var(--text);}
+.info-tags{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px;}
+.info-tags span{
+  padding:8px 18px;border-radius:30px;border:1px solid rgba(255,255,255,0.1);
+  font-size:0.85rem;color:var(--accent);background:rgba(0,224,255,0.05);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.info-tags svg{width:16px;height:16px;flex-shrink:0;}
+
+/* Skills */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;}
+.skill-card{
+  background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+  padding:25px;transition:.3s;
+}
+.skill-card:hover{transform:translateY(-8px);border-color:var(--accent);
+  box-shadow:0 15px 30px rgba(0,224,255,0.08);}
+.skill-card h3{font-size:1.1rem;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.skill-card h3 svg{width:22px;height:22px;color:var(--accent);flex-shrink:0;}
+.skill-item{margin-bottom:14px;}
+.skill-item .lbl{display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);margin-bottom:6px;}
+.bar{height:6px;border-radius:10px;background:rgba(255,255,255,0.06);overflow:hidden;}
+.bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
+
+/* Filter bar (reused for projects & certificates) */
+.filter-bar{display:flex;gap:12px;margin-bottom:35px;flex-wrap:wrap;}
+.filter-btn{
+  padding:8px 20px;border-radius:30px;border:1px solid rgba(255,255,255,0.1);
+  background:transparent;color:var(--muted);cursor:pointer;transition:.3s;font-size:0.9rem;
+}
+.filter-btn.active,.filter-btn:hover{background:var(--accent);color:#04101e;border-color:var(--accent);}
+
+/* Projects */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;}
+.project-card{
+  background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+  overflow:hidden;transition:.4s;display:flex;flex-direction:column;
+}
+.project-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.4);border-color:var(--accent2);}
+.project-thumb{
+  height:180px;display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid rgba(255,255,255,0.06);overflow:hidden;position:relative;
+  cursor:pointer;
+}
+.project-thumb .fallback-icon{width:48px;height:48px;color:rgba(255,255,255,0.35);position:relative;z-index:1;}
+.project-thumb::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,224,255,0.12), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(124,92,255,0.15), transparent 55%),
+    linear-gradient(135deg,#1a2540,#0f1626);
+}
+.project-thumb img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;
+  transition:transform .5s ease;
+}
+.project-card:hover .project-thumb img{transform:scale(1.06);}
+.gallery-badge{
+  position:absolute;top:10px;right:10px;z-index:3;background:rgba(4,16,30,0.75);
+  color:var(--text);font-size:0.72rem;padding:4px 10px;border-radius:20px;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,0.15);
+}
+.gallery-badge svg{width:12px;height:12px;}
+.project-body{padding:22px;flex:1;display:flex;flex-direction:column;}
+.project-body h3{margin-bottom:8px;font-size:1.15rem;}
+.project-body p{color:var(--muted);font-size:0.9rem;line-height:1.6;flex:1;margin-bottom:15px;}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;}
+.tag-row span{font-size:0.75rem;padding:4px 10px;border-radius:6px;background:rgba(124,92,255,0.12);color:var(--accent2);}
+.project-links{display:flex;gap:18px;flex-wrap:wrap;}
+.project-links a,.project-links button{
+  color:var(--accent);text-decoration:none;font-size:0.9rem;font-weight:600;
+  background:none;border:none;cursor:pointer;font-family:inherit;padding:0;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.project-links a:hover,.project-links button:hover{text-decoration:underline;}
+
+/* Certificates */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;}
+.cert-card{
+  background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+  overflow:hidden;transition:.4s;cursor:pointer;
+}
+.cert-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.4);border-color:var(--accent);}
+.cert-thumb{
+  height:150px;position:relative;overflow:hidden;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;justify-content:center;
+}
+.cert-thumb::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,#1a2540,#0f1626);
+}
+.cert-thumb .fallback-icon{width:42px;height:42px;color:rgba(255,255,255,0.35);position:relative;z-index:1;}
+.cert-thumb img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;
+  transition:transform .5s ease;
+}
+.cert-card:hover .cert-thumb img{transform:scale(1.06);}
+.cert-zoom-hint{
+  position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;
+  background:rgba(4,16,30,0.55);opacity:0;transition:.3s;color:var(--text);
+  font-size:0.85rem;gap:8px;
+}
+.cert-card:hover .cert-zoom-hint{opacity:1;}
+.cert-zoom-hint svg{width:18px;height:18px;}
+.cert-body{padding:18px 20px;}
+.cert-body h3{font-size:1rem;margin-bottom:4px;}
+.cert-body .cert-issuer{color:var(--muted);font-size:0.85rem;}
+.cert-body .cert-date{color:var(--accent2);font-size:0.75rem;margin-top:6px;display:inline-block;}
+
+/* Lightbox */
+.lightbox{
+  position:fixed;inset:0;background:rgba(4,8,16,0.92);backdrop-filter:blur(6px);
+  z-index:999;display:none;align-items:center;justify-content:center;padding:30px;
+}
+.lightbox.open{display:flex;}
+.lightbox-content{
+  max-width:min(90vw,1000px);max-height:85vh;display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.lightbox-img-wrap{position:relative;max-height:75vh;display:flex;align-items:center;justify-content:center;}
+.lightbox img{max-width:100%;max-height:75vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6);object-fit:contain;}
+.lightbox-caption{color:var(--muted);font-size:0.95rem;text-align:center;}
+.lightbox-caption strong{color:var(--text);}
+.lightbox-counter{color:var(--muted);font-size:0.8rem;font-family:monospace;}
+.lightbox-close{
+  position:absolute;top:20px;right:24px;background:none;border:none;color:var(--text);
+  font-size:2rem;cursor:pointer;line-height:1;z-index:1001;
+}
+.lightbox-close:hover{color:var(--accent);}
+.lightbox-nav{
+  position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.15);color:var(--text);width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.4rem;z-index:1001;
+  transition:.3s;
+}
+.lightbox-nav:hover{background:var(--accent);color:#04101e;}
+.lightbox-prev{left:10px;}
+.lightbox-next{right:10px;}
+@media(max-width:700px){
+  .lightbox-nav{width:38px;height:38px;font-size:1.1rem;}
+}
+
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;}
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr;}}
+.contact-info a, .contact-info div.contact-row{
+  display:flex;align-items:center;gap:15px;color:var(--muted);text-decoration:none;
+  margin-bottom:20px;font-size:1.05rem;transition:.3s;
+}
+.contact-info a:hover{color:var(--accent);transform:translateX(5px);}
+.icon-box{
+  width:45px;height:45px;border-radius:12px;background:rgba(0,224,255,0.08);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  overflow:hidden;color:var(--accent);
+}
+.icon-box svg{width:22px;height:22px;}
+
+.social-row{display:flex;gap:15px;margin-top:15px;flex-wrap:wrap;}
+.social-icon{
+  width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  color:var(--text);transition:.3s;
+}
+.social-icon svg{width:22px;height:22px;}
+.social-icon:hover{
+  color:#04101e;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  transform:translateY(-4px) scale(1.05);box-shadow:0 8px 20px rgba(0,224,255,0.25);
+  border-color:transparent;
+}
+.contact-cta{
+  background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+  padding:35px;display:flex;flex-direction:column;justify-content:center;gap:15px;
+}
+.contact-cta h3{font-size:1.4rem;}
+.contact-cta p{color:var(--muted);line-height:1.7;}
+.contact-cta .btn{align-self:flex-start;}
+.status-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:30px;
+  background:rgba(0,255,150,0.08);border:1px solid rgba(0,255,150,0.2);
+  color:#5dffb0;font-size:0.85rem;font-weight:600;align-self:flex-start;
+}
+.status-badge .dot{width:8px;height:8px;border-radius:50%;background:#5dffb0;
+  box-shadow:0 0 8px #5dffb0;animation:pulse-dot 1.8s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.quick-list{list-style:none;display:flex;flex-direction:column;gap:10px;color:var(--muted);font-size:0.95rem;}
+.quick-list strong{color:var(--text);}
+
+.back-to-top{
+  position:fixed;bottom:30px;right:30px;width:48px;height:48px;border-radius:50%;
+  background:var(--card);border:1px solid rgba(255,255,255,0.1);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;pointer-events:none;transition:.3s;z-index:90;
+}
+.back-to-top.show{opacity:1;pointer-events:auto;}
+.back-to-top:hover{background:var(--accent);color:#04101e;transform:translateY(-4px);}
+
+footer{text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;
+  border-top:1px solid rgba(255,255,255,0.05);}
+
+@media(max-width:700px){
+  .nav-toggle{display:block;}
+  .nav-links{
+    position:fixed;top:70px;left:0;right:0;background:var(--bg2);
+    flex-direction:column;gap:0;padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    transform:translateY(-150%);transition:transform .3s ease;
+  }
+  .nav-links.open{transform:translateY(0);}
+  .nav-links a{padding:14px 8%;width:100%;}
+  .nav-links a::after{display:none;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<nav>
+  <div class="logo">AZ</div>
+  <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">Sobre mí</a>
+    <a href="#skills">Habilidades</a>
+    <a href="#projects">Proyectos</a>
+    <a href="#certificates">Certificados</a>
+    <a href="#contact">Contacto</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>Hola, soy <span>Anthony Zuñiga</span></h1>
+  <p class="role"><span id="typed"></span><span class="cursor">&nbsp;</span></p>
+  <div class="btns">
+    <a href="#projects" class="btn btn-primary">Ver Proyectos</a>
+    <a href="#contact" class="btn btn-outline">Contáctame</a>
+    <a href="cv-anthony-zuniga.pdf" download class="btn btn-outline">📄 Descargar CV</a>
+  </div>
+  <div class="scroll-down">↓ Scroll<br>para explorar</div>
+</section>
+
+<section id="about" class="fade">
+  <div class="section-title"><span class="num">01.</span> Sobre mí</div>
+  <div class="about-grid">
+    <div class="avatar-box">
+      <div class="glow-ring"></div>
+      <img src="https://avatars.githubusercontent.com/u/175951106?v=4" alt="Foto de perfil de Anthony Zuñiga" loading="lazy">
+    </div>
+    <div class="about-text">
+      <p>Soy <strong>Edgar Anthony Paul Zuñiga Cavero</strong>, estudiante de Arquitectura de Sistemas de Información en <strong>CERTUS</strong> (5to ciclo), en camino a convertirme en <strong>Desarrollador Full Stack</strong>.</p>
+      <p>Me apasiona crear aplicaciones web y móviles funcionales, dinámicas, escalables y con buen diseño. Disfruto combinando frontend y backend para construir soluciones completas, además de explorar diseño UI/UX en Figma y desarrollo de videojuegos con Pygame.</p>
+      <p>Actualmente estoy fortaleciendo conocimientos en arquitectura de software, autenticación con Firebase y despliegue de aplicaciones modernas.</p>
+      <div class="info-tags">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.5-7-11.5A7 7 0 0 1 19 9.5C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Lima, Perú</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg> CERTUS - Sección 501M</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 16-4-4 4-4"/><path d="m16 8 4 4-4 4"/></svg> Full Stack Developer</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10v4M4 12h4M15 11h.01M18 13h.01"/></svg> Game Dev Hobbyist</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="fade">
+  <div class="section-title"><span class="num">02.</span> Habilidades</div>
+  <p class="section-sub">Tecnologías y herramientas con las que trabajo en mis proyectos académicos y personales.</p>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4M6 8l-4 4 4 4M14.5 4l-5 16"/></svg> Frontend</h3>
+      <div class="skill-item"><div class="lbl"><span>HTML5 / CSS3</span><span>90%</span></div><div class="bar"><div class="bar-fill" data-w="90"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>JavaScript</span><span>80%</span></div><div class="bar"><div class="bar-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>React</span><span>75%</span></div><div class="bar"><div class="bar-fill" data-w="75"></div></div></div>
+    </div>
+    <div class="skill-card">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/></svg> Backend</h3>
+      <div class="skill-item"><div class="lbl"><span>Node.js / Express</span><span>75%</span></div><div class="bar"><div class="bar-fill" data-w="75"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Java / Spring Boot</span><span>65%</span></div><div class="bar"><div class="bar-fill" data-w="65"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>MySQL</span><span>80%</span></div><div class="bar"><div class="bar-fill" data-w="80"></div></div></div>
+    </div>
+    <div class="skill-card">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94Z"/></svg> Herramientas</h3>
+      <div class="skill-item"><div class="lbl"><span>Figma (UI/UX)</span><span>85%</span></div><div class="bar"><div class="bar-fill" data-w="85"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Git / GitHub</span><span>80%</span></div><div class="bar"><div class="bar-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Firebase</span><span>70%</span></div><div class="bar"><div class="bar-fill" data-w="70"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Docker</span><span>60%</span></div><div class="bar"><div class="bar-fill" data-w="60"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Postman</span><span>65%</span></div><div class="bar"><div class="bar-fill" data-w="65"></div></div></div>
+    </div>
+    <div class="skill-card">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10v4M4 12h4M15 11h.01M18 13h.01"/></svg> Game Dev</h3>
+      <div class="skill-item"><div class="lbl"><span>Python / Pygame</span><span>75%</span></div><div class="bar"><div class="bar-fill" data-w="75"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Flutter</span><span>55%</span></div><div class="bar"><div class="bar-fill" data-w="55"></div></div></div>
+      <div class="skill-item"><div class="lbl"><span>Diseño de niveles / IA básica</span><span>70%</span></div><div class="bar"><div class="bar-fill" data-w="70"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="fade">
+  <div class="section-title"><span class="num">03.</span> Proyectos</div>
+  <p class="section-sub">Algunos de los proyectos en los que he trabajado, académicos y personales. Haz clic en la imagen para ver la galería completa.</p>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="web">Web</button>
+    <button class="filter-btn" data-filter="data">Data / Docker</button>
+    <button class="filter-btn" data-filter="design">Diseño</button>
+  </div>
+  <div class="projects-grid" id="projects-grid">
+
+    <!-- Cada proyecto: pon tus imágenes en /images/projects/ y lístalas separadas por coma en data-images -->
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb" data-images="image/shopzone.png,image/shopzone2.png,image/shopzone3.png" data-title="ShopZone">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <img src="image/shopzone.png" alt="Captura de ShopZone" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>ShopZone</h3>
+        <p>Plataforma web de tienda virtual con catálogo de productos, carrito y zona de compra interactiva.</p>
+        <div class="tag-row"><span>JavaScript</span><span>HTML/CSS</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05/SHOPZONE---TIENDA-VIRTUAL" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/shopzone.png,image/shopzone2.png,image/shopzone3.png" data-title="ShopZone">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb" data-images="image/galeryspace.png,image/galeryspace2.png" data-title="GalerySpace">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <img src="image/galeryspace.png" alt="Captura de GalerySpace" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>GalerySpace</h3>
+        <p>Galería web para que los usuarios suban trabajos, los compartan y puedan comprarlos.</p>
+        <div class="tag-row"><span>JavaScript</span><span>Web</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05/GalerySpace" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/galeryspace.png,image/galeryspace2.png" data-title="GalerySpace">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb" data-images="image/bienestar.png,image/bienestar2.png" data-title="Bienestar de Salud">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        <img src="image/bienestar.png" alt="Captura de Bienestar de Salud" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>Bienestar de Salud</h3>
+        <p>Plataforma de ayuda y orientación frente a problemas de depresión estudiantil.</p>
+        <div class="tag-row"><span>CSS</span><span>Web</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05/BienestarDeSalud" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/bienestar.png,image/bienestar2.png" data-title="Bienestar de Salud">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="web">
+      <div class="project-thumb" data-images="image/portal.png,image/portal2.png,image/portal3.png" data-title="Portal HTA">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <img src="image/portal.png" alt="Captura de Portal HTA" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>Portal HTA</h3>
+        <p>Sistema web para el monitoreo de presión arterial: diseño de arquitectura, login con Firebase y prototipo en Figma. Stack: React + Node.js + MySQL.</p>
+        <div class="tag-row"><span>React</span><span>Node.js</span><span>MySQL</span><span>Figma</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/portal.png,image/portal2.png,image/portal3.png" data-title="Portal HTA">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="design">
+      <div class="project-thumb" data-images="image/figma.png,image/figma2.png" data-title="TalentLink">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>
+        <img src="image/figma.png" alt="Captura de TalentLink" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>TalentLink</h3>
+        <p>MVP interactivo en Figma de plataforma de inclusión laboral: login, ofertas de empleo, cursos, certificados y perfil de usuario con diseño dark navy.</p>
+        <div class="tag-row"><span>Figma</span><span>UI/UX</span><span>Prototipo</span></div>
+        <div class="project-links">
+          <a href="https://www.figma.com/design/4e6W7I79thzc3oOuHIKANF/MVP-Prototipo---Plataforma-Inclusi%C3%B3n-Laboral?node-id=0-1&t=SwLJ4VdKcNZr3TiH-1" target="_blank" rel="noopener">Figma →</a>
+          <button class="js-open-gallery" data-images="image/figma.png,image/figma2.png" data-title="TalentLink">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="data">
+      <div class="project-thumb" data-images="image/saludmedico.png,image/saludmedico2.png" data-title="SaludMédico BigData">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg>
+        <img src="image/saludmedico.png" alt="Captura de SaludMédico BigData" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>SaludMédico BigData</h3>
+        <p>Proyecto de Big Data aplicado al sector salud: procesamiento y análisis de datos médicos con Python. <!-- TODO: ajusta esta descripción con el detalle real del proyecto (qué dataset, qué herramientas de análisis, qué resultado obtuviste) --></p>
+        <div class="tag-row"><span>Python</span><span>Big Data</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05/SaludMedico_BigData" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/saludmedico.png,image/saludmedico2.png" data-title="SaludMédico BigData">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-cat="data">
+      <div class="project-thumb" data-images="image/netflix.png,image/netflix2.png" data-title="Docker Hadoop BD">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M6 12h.01M10 12h.01M14 12h.01M18 12h.01"/></svg>
+        <img src="image/netflix.png" alt="Captura de Docker Hadoop BD" loading="lazy" onerror="this.style.display='none'">
+        <span class="gallery-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Galería</span>
+      </div>
+      <div class="project-body">
+        <h3>Docker Hadoop BD</h3>
+        <p>Entorno de Big Data con Hadoop containerizado en Docker, para almacenamiento distribuido y procesamiento de datos a gran escala. <!-- TODO: ajusta esta descripción con el detalle real del proyecto --></p>
+        <div class="tag-row"><span>Docker</span><span>Hadoop</span><span>Big Data</span></div>
+        <div class="project-links">
+          <a href="https://github.com/Anthonyzc05/Docker_Hadoop-BD" target="_blank" rel="noopener">GitHub →</a>
+          <button class="js-open-gallery" data-images="image/netflix.png,image/netflix2.png" data-title="Docker Hadoop BD">Ver galería </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="certificates" class="fade">
+  <div class="section-title"><span class="num">04.</span> Certificados</div>
+  <p class="section-sub">Cursos y certificaciones que he completado. Haz clic para ver el certificado en grande.</p>
+
+  <!-- Cada certificado: coloca tu imagen en /images/certificates/ con el mismo nombre de archivo que ya tienes.
+       Revisa institución/fecha marcados [Confirma...] — no pude leerlos desde LinkedIn (el sitio bloquea el acceso automático). -->
+  <div class="filter-bar">
+    <button class="filter-btn cert-filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn cert-filter-btn" data-filter="cloud">Cloud</button>
+    <button class="filter-btn cert-filter-btn" data-filter="ia">IA</button>
+    <button class="filter-btn cert-filter-btn" data-filter="seguridad">Seguridad</button>
+    <button class="filter-btn cert-filter-btn" data-filter="redes">Redes / Sistemas</button>
+    <button class="filter-btn cert-filter-btn" data-filter="emprendimiento">Emprendimiento</button>
+  </div>
+  <div class="cert-grid" id="certificates-grid">
+
+    <div class="cert-card js-open-gallery" data-cat="cloud" data-images="image/AWS Academy Graduate - Cloud Foundations - Training Badge.png" data-title="AWS Academy Graduate - Cloud Foundations" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/AWS Academy Graduate - Cloud Foundations - Training Badge.png" alt="Certificado: AWS Academy Graduate - Cloud Foundations" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>AWS Academy Graduate - Cloud Foundations</h3>
+        <div class="cert-issuer">AWS Academy</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="ia" data-images="image/Big school - desarrollo de la ia.png" data-title="Desarrollo de la IA" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/Big school - desarrollo de la ia.png" alt="Certificado: Desarrollo de la IA - Big School" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Desarrollo de la IA</h3>
+        <div class="cert-issuer">Big School</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="redes" data-images="image/certificado_networking.png" data-title="Certificado de Networking" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/certificado_networking.png" alt="Certificado de Networking" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Certificado de Networking</h3>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="redes" data-images="image/certificado_networking2.png" data-title="Certificado de Networking II" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/certificado_networking2.png" alt="Certificado de Networking II" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Certificado de Networking II</h3>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="emprendimiento" data-images="image/ESENCIALES PARA EL EMPRENDIMIENTO.png" data-title="Esenciales para el Emprendimiento" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/ESENCIALES PARA EL EMPRENDIMIENTO.png" alt="Certificado: Esenciales para el Emprendimiento" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Esenciales para el Emprendimiento</h3>
+        <div class="cert-issuer">IBM SkillsBluid</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="ia" data-images="image/fundamentos_de_la_IA.png" data-title="Fundamentos de la IA" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/fundamentos_de_la_IA.png" alt="Certificado: Fundamentos de la IA" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Fundamentos de la IA</h3>
+        <div class="cert-issuer">Powered By AWS</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="cloud" data-images="image/fundamentos_de_la_nube.png" data-title="Fundamentos de la Nube" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/fundamentos_de_la_nube.png" alt="Certificado: Fundamentos de la Nube" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Fundamentos de la Nube</h3>
+        <div class="cert-issuer">Powered By AWS</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="seguridad" data-images="image/introduccion_ciberseguridad.png" data-title="Introducción a la Ciberseguridad" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/introduccion_ciberseguridad.png" alt="Certificado: Introducción a la Ciberseguridad" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Introducción a la Ciberseguridad</h3>
+        <div class="cert-issuer">Cisco Networking Academy</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+    <div class="cert-card js-open-gallery" data-cat="redes" data-images="image/RED-HAT SYSTEM ADMINISTRATION.png" data-title="Red Hat System Administration" tabindex="0" role="button" aria-label="Ver certificado en grande">
+      <div class="cert-thumb">
+        <svg class="fallback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 21h8M12 17v4M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M6 8H4a2 2 0 0 0 0 4h2"/></svg>
+        <img src="image/RED-HAT SYSTEM ADMINISTRATION.png" alt="Certificado: Red Hat System Administration" loading="lazy" onerror="this.style.display='none'">
+        <div class="cert-zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg> Ver en grande</div>
+      </div>
+      <div class="cert-body">
+        <h3>Red Hat System Administration</h3>
+        <div class="cert-issuer">Red Hat Academy</div>
+        <span class="cert-date">[Confirma la fecha]</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact" class="fade">
+  <div class="section-title"><span class="num">05.</span> Contacto</div>
+  <p class="section-sub">¿Tienes un proyecto en mente o quieres colaborar? Escríbeme.</p>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <!-- TODO: reemplaza estos datos por los tuyos reales -->
+      <a href="https://wa.me/51934703024" target="_blank" rel="noopener">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.15c-.24.68-1.4 1.32-1.94 1.36-.5.05-1.02.24-3.4-.71-2.9-1.16-4.71-4.08-4.85-4.27-.14-.19-1.16-1.55-1.16-2.96s.72-2.1.98-2.39c.24-.27.53-.34.71-.34.18 0 .36 0 .51.01.17.01.39-.06.61.47.24.58.81 2 .88 2.15.07.14.12.32.02.51-.1.19-.14.31-.29.47-.14.16-.3.36-.43.48-.14.14-.29.29-.13.57.17.28.74 1.22 1.6 1.98 1.1.98 2.03 1.28 2.31 1.43.28.14.44.12.6-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.63-.14.26.1 1.66.78 1.94.93.28.14.47.21.53.33.07.12.07.68-.17 1.35Z"/></svg></div> WhatsApp: +51 934703024
+      </a>
+      <a href="mailto:anthonyzuca052006@gmail.com">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div> anthonyzuca052006@gmail.com
+      </a>
+      <div class="contact-row"><div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.5-7-11.5A7 7 0 0 1 19 9.5C19 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div> Lima, Perú</div>
+      <div class="contact-row"><div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div> CERTUS - Arquitectura de Sistemas de Información</div>
+
+      <div class="social-row">
+        <a href="https://github.com/Anthonyzc05" target="_blank" rel="noopener" class="social-icon" title="GitHub" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.86 10.94.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.33.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.21.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/anthony-zu%C3%B1iga-51009b333/" target="_blank" rel="noopener" class="social-icon" title="LinkedIn" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@thony_.05?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener" class="social-icon" title="TikTok" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82a4.28 4.28 0 0 1-3.4-1.59V14.6a4.6 4.6 0 1 1-3.9-4.55v2.3a2.3 2.3 0 1 0 1.6 2.18V0h2.3a4.28 4.28 0 0 0 4.28 4.28v2.3a6.5 6.5 0 0 1-.88-.06v-.7z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="contact-cta">
+      <div class="status-badge"><span class="dot"></span> Disponible para proyectos</div>
+      <h3>Trabajemos juntos</h3>
+      <p>Estoy en busca de prácticas, proyectos freelance o colaboraciones donde pueda aportar como desarrollador full stack y diseñador UI/UX.</p>
+      <ul class="quick-list">
+        <li><strong>Tiempo de respuesta:</strong> usualmente menos de 24h</li>
+        <li><strong>Modalidad:</strong> remoto / presencial (Lima)</li>
+        <li><strong>Estado:</strong> estudiante de Arquitectura de SI - 5to ciclo</li>
+      </ul>
+      <a href="doc/CV_Anthony_Zuniga.docx" download class="btn btn-outline"> Descargar mi CV</a>
+    </div>
+  </div>
+</section>
+
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<!-- Lightbox reutilizable para proyectos y certificados -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Imagen anterior">‹</button>
+  <div class="lightbox-content">
+    <div class="lightbox-img-wrap">
+      <img id="lightboxImg" src="" alt="">
+    </div>
+    <div class="lightbox-caption"><strong id="lightboxTitle"></strong></div>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  </div>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Siguiente imagen">›</button>
+</div>
+
+<footer>
+  © 2026 Anthony Zuñiga — Hecho con 💙 y mucho café.
+</footer>
+
+<script>
+// Typed text effect
+const roles = ["Estudiante de Arquitectura de SI", "Full Stack Developer en formación", "Diseñador UI/UX en Figma", "Game Developer (Pygame)"];
+let r=0,c=0,deleting=false;
+const typedEl = document.getElementById('typed');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function type(){
+  const word = roles[r];
+  if(!deleting){
+    typedEl.textContent = word.slice(0,c+1); c++;
+    if(c===word.length){deleting=true; setTimeout(type,1800); return;}
+  } else {
+    typedEl.textContent = word.slice(0,c-1); c--;
+    if(c===0){deleting=false; r=(r+1)%roles.length;}
+  }
+  setTimeout(type, deleting?40:90);
+}
+if(prefersReducedMotion){
+  typedEl.textContent = roles[0];
+} else {
+  type();
+}
+
+// Fade-in on scroll
+const fadeEls = document.querySelectorAll('.fade');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.bar-fill').forEach(b=>b.style.width = b.dataset.w+'%');
+    }
+  });
+},{threshold:0.15});
+fadeEls.forEach(el=>observer.observe(el));
+
+// Project filter
+document.querySelectorAll('.filter-btn:not(.cert-filter-btn)').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn:not(.cert-filter-btn)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.project-card').forEach(card=>{
+      card.style.display = (f==='all' || card.dataset.cat===f) ? 'flex' : 'none';
+    });
+  });
+});
+
+// Certificate filter
+document.querySelectorAll('.cert-filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cert-filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.cert-card').forEach(card=>{
+      card.style.display = (f==='all' || card.dataset.cat===f) ? '' : 'none';
+    });
+  });
+});
+
+// Mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', ()=>{
+  const isOpen = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', isOpen);
+  navToggle.textContent = isOpen ? '✕' : '☰';
+});
+navLinks.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click', ()=>{
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.textContent = '☰';
+  });
+});
+
+// Active nav link highlighting on scroll
+const sections = document.querySelectorAll('section[id]');
+const navA = document.querySelectorAll('.nav-links a');
+const navObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navA.forEach(a=>a.classList.remove('active'));
+      const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+      if(active) active.classList.add('active');
+    }
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+sections.forEach(s=>navObserver.observe(s));
+
+// Back to top button
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', ()=>{
+  backToTop.classList.toggle('show', window.scrollY > 500);
+});
+backToTop.addEventListener('click', ()=>{
+  window.scrollTo({top:0, behavior: prefersReducedMotion ? 'auto' : 'smooth'});
+});
+
+/* ---------------- LIGHTBOX (galería de proyectos y certificados) ---------------- */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxCounter = document.getElementById('lightboxCounter');
+const lightboxPrev = document.getElementById('lightboxPrev');
+const lightboxNext = document.getElementById('lightboxNext');
+const lightboxClose = document.getElementById('lightboxClose');
+
+let currentImages = [];
+let currentIndex = 0;
+let currentTitle = '';
+
+function openLightbox(images, title, startIndex){
+  currentImages = images;
+  currentTitle = title;
+  currentIndex = startIndex || 0;
+  updateLightbox();
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lightboxClose.focus();
+}
+
+function updateLightbox(){
+  lightboxImg.src = currentImages[currentIndex];
+  lightboxImg.alt = currentTitle + ' - imagen ' + (currentIndex+1);
+  lightboxTitle.textContent = currentTitle;
+  lightboxCounter.textContent = currentImages.length > 1 ? (currentIndex+1) + ' / ' + currentImages.length : '';
+  const multi = currentImages.length > 1;
+  lightboxPrev.style.display = multi ? 'flex' : 'none';
+  lightboxNext.style.display = multi ? 'flex' : 'none';
+}
+
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+lightboxPrev.addEventListener('click', ()=>{
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  updateLightbox();
+});
+lightboxNext.addEventListener('click', ()=>{
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  updateLightbox();
+});
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e)=>{
+  if(e.target === lightbox) closeLightbox();
+});
+document.addEventListener('keydown', (e)=>{
+  if(!lightbox.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLightbox();
+  if(e.key === 'ArrowLeft') lightboxPrev.click();
+  if(e.key === 'ArrowRight') lightboxNext.click();
+});
+
+// Triggers: project thumbnails, "Ver galería" buttons, and certificate cards
+function bindGalleryTrigger(el){
+  el.addEventListener('click', ()=>{
+    const imgs = el.dataset.images.split(',').map(s=>s.trim()).filter(Boolean);
+    const title = el.dataset.title || '';
+    openLightbox(imgs, title, 0);
+  });
+  // keyboard accessibility for elements acting as buttons (cert-card)
+  if(el.getAttribute('role') === 'button'){
+    el.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        el.click();
+      }
+    });
+  }
+}
+document.querySelectorAll('.project-thumb[data-images]').forEach(bindGalleryTrigger);
+document.querySelectorAll('.js-open-gallery[data-images]').forEach(bindGalleryTrigger);
+
+/* ---------------- Fondo de partículas ---------------- */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize(); window.addEventListener('resize',resize);
+
+if(!prefersReducedMotion){
+  let particles = [];
+  for(let i=0;i<70;i++){
+    particles.push({
+      x:Math.random()*canvas.width, y:Math.random()*canvas.height,
+      vx:(Math.random()-0.5)*0.4, vy:(Math.random()-0.5)*0.4, r:Math.random()*2+0.5
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(0,224,255,0.5)';
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>canvas.width)p.vx*=-1;
+      if(p.y<0||p.y>canvas.height)p.vy*=-1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    });
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const a=particles[i], b=particles[j];
+        const d = Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<120){
+          ctx.strokeStyle = `rgba(124,92,255,${0.1*(1-d/120)})`;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+
+</body>
+</html>
